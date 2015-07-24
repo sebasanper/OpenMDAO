@@ -3,7 +3,7 @@
 \usepackage{tikz}
 \usepackage[simplified]{pgf-umlcd}
 \usepackage{parskip}
-\usepackage{verbments}
+\usepackage{verbments} % One must install pygments and compile latex with -shell-escape option.
 
 
 \usepackage[letterpaper]{geometry}
@@ -23,29 +23,29 @@
 
 \section{Analysis Composition Objects}
 
-OpenMDAO is designed around the Modular Analysis and Unfied Derivatives (MAUD) mathematical
+OpenMDAO is designed around the Modular Analysis and Unified Derivatives (MAUD) mathematical
 architecture. In MAUD, all analyses are represented as systems of coupled non-linear implicit equations.
-\classname{System} is the baseclass for all objects that are responsible for mathematical computations.
+\classname{System} is the base class for all objects that are responsible for mathematical computations.
 Any instance of \classname{System} must implement 5 methods in order to be able to perform
 analysis:
 
 \begin{itemize}
     \item apply\_nonlinear: solve for the residual values given the values for
     the inputs and states
-    \item solve\_nonlienar: given values for the inputs, find the values of the
+    \item solve\_nonlinear: given values for the inputs, find the values of the
     state variables that drive the non linear residual equations to zero
     \item linearize: compute partial derivatives around current location for all
     resids as a function of current input and state variables
     \item multi\_apply\_linear: linear operator which provides the product of the systems
     Jacobian with a given set of vectors
-    \item multi\_solve\_linear: solve the linear system defined by the jacobian on the
+    \item multi\_solve\_linear: solve the linear system defined by the Jacobian on the
     lhs and a set of vectors on the right hand side
 \end{itemize}
 
-There are three different types of \classname{System} that the user can user or extend:
+There are three different types of \classname{System} that the user can use or extend:
 \begin{enumerate}
-    \item Component: responsible creating variables, performing computations with them, and providing derivatives of those computations
-    \item Group: Defined collection of systems, executed in a given order, that are solved (linear and non-linear) as a block
+    \item Component: responsible for creating variables, performing computations with them, and providing derivatives of those computations
+    \item Group: Defines a collection of systems, executed in a given order, that are solved (linear and non-linear) as a block
     \item Assembly: A Group that also defines a unique name-space for the systems it contains and tracks data connections between its children
 \end{enumerate}
 
@@ -98,7 +98,7 @@ There are three different types of \classname{System} that the user can user or 
 \section{Component API}
 
 The basic unit of computational work in OpenMDAO is the \classname{Component}.
-Componnets can contain implicit and explicit functions. Implicit functions are created
+Components can contain implicit and explicit functions. Implicit functions are created
 by adding state variables. Explicit functions are defined by adding outputs.
 
 
@@ -135,7 +135,7 @@ This is the simplest, and most compact way to define derivatives.
             return J
 \end{pyglist}
 
-If the user wishes to implenent the linear operator directly, they can overload
+If the user wishes to implement the linear operator directly, they can overload
 the \method{apply\_linear} from the \classname{Component} base class.
 
 \begin{pyglist}[language=python]
@@ -257,8 +257,8 @@ the \method{apply\_linear} method, users can overload it if they choose.
 \end{pyglist}
 
 \subsection{Grouping related variables}
-It is often desireable to group sets of related variables together in a hierarchical
-tree structure. However, OpenMDAO requires a totally flat variable space foreach component.
+It is often desirable to group sets of related variables together in a hierarchical
+tree structure. However, OpenMDAO requires a totally flat variable space for each component.
 The solution to this issue is to establish a hierarchical naming convention of your choosing, and
 utilize it in the creation of variables.
 
@@ -343,7 +343,7 @@ the variable name itself.
 \end{pyglist}
 
 The fully qualified name for the \var{PR} variable in the \classname{PressureRise}
-component , from within the \className{EngineCycle} Assembly, is \var{hpc.pressure\_rise.PR}.
+component, from within the \className{EngineCycle} Assembly, is \var{hpc.pressure\_rise.PR}.
 However \var{hpc.pressure\_rise.PR} was also promoted, and so the location in the data vector
 that holds it can also be addressed by \var{PR} from within the \className{EngineCycle} Assembly.
 
@@ -389,7 +389,7 @@ SensitivityDriver, or Montecarlo.
 Although \classname{Driver} does implement the \classname{System} interface it is not a regular system.
 Within a hierarchy composed of  \classname{Component}, \classname{Group}, and \classname{Assembly}
 instances all variables are available to any system at any hierarchical level.However, an instance
-of \classname{Driver} represents an opaque boundry across which only certain defined variables are allowed
+of \classname{Driver} represents an opaque boundary across which only certain defined variables are allowed
 to cross.
 
 An instance of \classname{Driver} may be used as a \classname{Component} in a higher level analysis,
@@ -401,7 +401,7 @@ The \classname{Driver} base class could provide a finite-difference based implem
 Note: Driver might be a sub-class of Component, but its not totally clear yet.
 \begin{itemize}
     \item How do you define variables? Probably with the same \method{add\_input}, \method{add\_state}, \method{add\_output} api.
-    \item How do you get data from the system to the boundary variables? Maybe just have the user issue manaul assignments in
+    \item How do you get data from the system to the boundary variables? Maybe just have the user issue manual assignments in
     a \method{post\_execute} or some other kind of hook.
 \end{itemize}
 
